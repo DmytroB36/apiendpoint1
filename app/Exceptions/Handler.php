@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class Handler extends ExceptionHandler
 {
@@ -42,10 +43,17 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return JsonResource|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $exception)
     {
+        if ($request->wantsJson()) {
+            return new JsonResource([
+                'status' => 'error',
+                'message' => $exception->getMessage()
+            ]);
+        }
+
         return parent::render($request, $exception);
     }
 }
