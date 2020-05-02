@@ -13,23 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-
-
-Route::middleware('auth:api')->group(function () {
-
-    Route::get('/balance', 'ApiController@getBalance');
-    Route::get('/items', 'ApiController@getItems');
-    Route::post('/items/add', 'ApiController@addItem');
-    Route::post('/items/remove', 'ApiController@removeItem');
-
-});
+Route::get('/balance', 'ApiController@getBalance');
+Route::get('/items', 'ApiController@getItems');
+Route::post('/items/add', 'ApiController@addItem');
+Route::post('/items/remove', 'ApiController@removeItem');
 
 Route::group(['namespace' => 'Api'], function () {
     Route::group(['namespace' => 'Auth'], function () {
 
         Route::get('auth', 'AuthController');
-        Route::post('register', 'RegisterController');
-        Route::post('login', 'LoginController');
-        Route::post('logout', 'LogoutController')->middleware('auth:api');
+        Route::post('logout', 'LogoutController');
     });
 });

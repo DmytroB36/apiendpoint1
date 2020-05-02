@@ -3,12 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\CalorieBalance;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiController extends Controller
 {
-    public function getBalance() {
+
+    private function checkAuthToken(Request $request) {
+        $authToken = $request->get('auth-token');
+
+        if (empty($authToken)) {
+            throw new \Exception("Unauthorized");
+        }
+
+        $user = User::where(['auth_token' => $request->get('auth-token')])->first();
+
+        if (empty($user)) {
+            throw new \Exception("Unauthorized");
+        }
+    }
+
+    public function getBalance(Request $request) {
+
+        $this->checkAuthToken($request);
+
+        $user = User::where(['auth_token' => $request->get('auth-token')])->first();
+
+        if (empty($user)) {
+            throw new \Exception("Unauthorized");
+        }
 
         $totalBurned = CalorieBalance::where(['type' => CalorieBalance::TYPE_BURNED])->sum('count');
         $totalIntaken = CalorieBalance::where(['type' => CalorieBalance::TYPE_INTAKEN])->sum('count');
@@ -22,6 +46,8 @@ class ApiController extends Controller
     }
 
     public function getItems(Request $request) {
+
+        $this->checkAuthToken($request);
 
         $type = $request->get('type');
 
@@ -39,6 +65,8 @@ class ApiController extends Controller
     }
 
     public function addItem(Request $request) {
+
+        $this->checkAuthToken($request);
 
         if ($request->get('type') != CalorieBalance::TYPE_INTAKEN && $request->get('type') != CalorieBalance::TYPE_BURNED) {
             throw new \Exception("Unknown type");
@@ -67,6 +95,8 @@ class ApiController extends Controller
     }
 
     public function removeItem(Request $request) {
+
+        $this->checkAuthToken($request);
 
         $id = $request->get('id');
 

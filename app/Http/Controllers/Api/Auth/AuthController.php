@@ -34,21 +34,15 @@ class AuthController extends Controller
             $user = $newUser;
         }
 
-        if (!Auth::loginUsingId($user->id)) {
-            return response()->json([
-                'message' => 'You cannot sign with those credentials',
-                'errors' => 'Unauthorised'
-            ], 401);
-        }
+        $token = User::generateToken();
+        $user->auth_token = $token;
 
-        $token = Auth::user()->createToken(config('app.name'));
-        $token->token->expires_at = Carbon::now()->addMonth();
-        $token->token->save();
+        $user->save();
 
         return response()->json([
             'status' => 'success',
             'id' => $user->id,
-            'auth_token' => $token->accessToken
+            'auth_token' => $token
         ]);
     }
 }
