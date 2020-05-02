@@ -20,6 +20,10 @@ class AuthController extends Controller
     {
         $socialUserId = $request->get('social_user_id');
 
+        if (empty($socialUserId)) {
+            throw new \Exception("Parameter social_user_id can't be empty");
+        }
+
         $user = User::where(['social_user_id' => $socialUserId])->first();
 
         if (empty($user)) {
