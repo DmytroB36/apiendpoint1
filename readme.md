@@ -10,6 +10,9 @@
  - run `php artisan key:generate`
  - Edit .env file and set db credentials
  - run `php artisan migrate`
+ - run `php artisan passport:install`
+ - run `php artisan passport:keys`
+ - run `php artisan config:clear`
  
 #### Apache virtual-host settings example
 **Apache must point to the directory - "public"**

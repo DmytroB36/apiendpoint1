@@ -13,7 +13,7 @@ class ApiController extends Controller
         $totalBurned = CalorieBalance::where(['type' => CalorieBalance::TYPE_BURNED])->sum('count');
         $totalIntaken = CalorieBalance::where(['type' => CalorieBalance::TYPE_INTAKEN])->sum('count');
 
-        return JsonResource::make([
+        return response()->json([
             'status' => 'success',
             'total_burned' => $totalBurned,
             'total_intaken' => $totalIntaken
@@ -31,7 +31,7 @@ class ApiController extends Controller
 
         $result = CalorieBalance::where(['type' => $type])->get();
 
-        return JsonResource::make([
+        return response()->json([
             'status' => 'success',
             'data' => $result
         ]);
@@ -59,7 +59,7 @@ class ApiController extends Controller
 
         $newItem->refresh();
 
-        return JsonResource::make([
+        return response()->json([
             'status' => 'success',
             'id' => $newItem->id
         ]);
@@ -78,7 +78,7 @@ class ApiController extends Controller
             throw new \Exception("Item not found");
         }
 
-        return JsonResource::make([
+        return response()->json([
             'status' => 'success',
             'id' => $id
         ]);

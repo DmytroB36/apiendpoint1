@@ -13,13 +13,26 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/balance', 'ApiController@getBalance');
-Route::get('/items', 'ApiController@getItems');
-Route::post('/items/add', 'ApiController@addItem');
-Route::post('/items/remove', 'ApiController@removeItem');
+
 
 Route::middleware('auth:api')->group(function () {
 
-    // TODO move routes here
+    Route::get('/balance', 'ApiController@getBalance');
+    Route::get('/items', 'ApiController@getItems');
+    Route::post('/items/add', 'ApiController@addItem');
+    Route::post('/items/remove', 'ApiController@removeItem');
 
+});
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::group(['namespace' => 'Api'], function () {
+    Route::group(['namespace' => 'Auth'], function () {
+
+        Route::post('register', 'RegisterController');
+        Route::post('login', 'LoginController');
+        Route::post('logout', 'LogoutController')->middleware('auth:api');
+    });
 });
